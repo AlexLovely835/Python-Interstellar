@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interstellar</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}">
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+	<script>
+		function makeId(num) {
+			id = String(num);
+			$.ajax("{{ url_for('go') + '?id=' }}" + id).done(function (reply) {
+					$('#story').html(reply);
+				}); 
+		};
+
+	</script>
+</head>
+<body>
+<div class="pageblock"></div>
+<div class="wrapper">
+	<div>
+		<div id="title-bar" class="boxshadow">
+			<h1 class="title">INTERSTELLAR</h1>
+		</div>
+	</div>
+  <div>
+		<div id="location-bar" class="boxshadow">
+			<h1 class="location">Location</h1>
+		</div>
+	</div>
+  <div>
+		<div id="sidebar" class= "boxshadow game">
+			<p>Content goes here.</p>
+		</div>
+		<div id="sidebar2" class= "boxshadow game">
+			<p>Content goes here.</p>
+		</div>
+		<div id="sidebar" class= "boxshadow game">
+			<p>Content goes here.</p>
+		</div>
+	</div>
+  <div>
+		<div id="story" class= "boxshadow game">
+			{% include 'game.html' %}
+		</div>
+</div>
+</body>
+</html>
