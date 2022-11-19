@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interstellar</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}">
+	<script src="https://kit.fontawesome.com/22f5ccdbef.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="{{ url_for('admin.static', filename='javascript/admin.js')}}"></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="pageblock"></div>
+    <div style="width: 960px; margin: auto;">
+        {% include 'flash_notifs.html' %}
+        <div style="padding: 20px;" class="game boxshadow">
+            <a class="adm-btn-link" href="{{ url_for('admin.users', pagenum=1) }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
+            <h2>Editing User {{ user.username }}</h2>
+            <p>User Id: {{ user.id }}</p>
+            <p>Last Online: {{ user.last_online }}</p>
+            <form action="{{ url_for('admin.edit_user') + '?id=' + user.id|string }}" method="post">
+                {{ form.hidden_tag() }}
+                <p>{{ form.username.label }}: {{ form.username(size=32) }}</p>
+                {% for error in form.username.errors %}
+                <span style="color: white;">[{{ error }}]</span>
+                {% endfor %}
+                <p>{{ form.email.label }}: {{ form.email(size=32) }}</p>
+                {% for error in form.email.errors %}
+                <span style="color: white;">[{{ error }}]</span>
+                {% endfor %}
+                {% if user.id != 1 %}
+                <p>(Privilege level 1 is a normal user and 2 is an admin.)</p>
+                <p>{{ form.privilege_level.label }}: {{ form.privilege_level(size=5)}}</p>
+                {% for error in form.privilege_level.errors %}
+                <span style="color: white;">[{{ error }}]</span>
+                {% endfor %}
+                {% endif %}
+                <p>{{ form.submit() }}</p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

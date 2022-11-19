@@ -1,0 +1,36 @@
+<div class="storylet">
+    <div>
+        <div id="imgcontainer" class="boxshadow">
+            <center><img src= "{{ url_for('static', filename='images/' + storylet.image) }}" class ="digitaleffect"></center>
+        </div>
+    </div>
+    <div>
+        <div id="storytext">
+            <h1>{{ storylet.title }}</h1>
+            <p style="margin-top: 5px;">{{ storylet.description }}</p>
+        </div>
+    </div>
+</div> 
+<div style="margin-top: 15px; margin-bottom: 15px;" class="branch-top">
+    <div class="branch-margin">
+        <img width="40" src="{{ url_for('static', filename='images/' + branch.image) }}" class="digitaleffect boxshadow">
+    </div>
+    <div>
+        <div id="storytext">
+            <h2 class="branch-margin">{{ branch.title }}</h2>
+            <p>{{ branch.description }}</p>
+        </div>
+    </div>
+</div>
+<div id="branch">
+    <div>
+        <div id="storytext">
+            <h2 class="branch-margin">{{ result.title }}</h2>
+            <p>{{ result.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div  style="text-align: right;" >
+    <button class="button" onclick="{% if result.next == 0 %} returnToHome() {% else %} callStorylet({{ result.next }}) {% endif %}">onward</button> 
+</div>

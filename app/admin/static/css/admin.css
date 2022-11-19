@@ -1,0 +1,261 @@
+/* navbar */
+.navbar {
+	width: 100%;
+	overflow: hidden;
+	border-bottom: solid white 2px;
+	background: #324A4A;
+}
+
+.navbar-inner {
+	margin: auto;
+	width: 960px;
+}
+
+.nav-link {
+	float: left;
+	color: #f2f2f2e1;
+	text-align: center;
+	text-decoration: none;
+	padding: 10px 12px;
+	font-size: 14px;
+}
+
+.nav-link:hover {
+	color: white;
+	background: #355959;
+}
+
+.dropdown-container {
+	float: right;
+	overflow: hidden;
+}
+
+.dropdown {
+	display: none;
+	position: absolute;
+	background-color:#324A4A;
+	min-width: 90px;
+	overflow: auto;
+	z-index: 5;
+	margin-top: 35px;
+	margin-left: 10px;
+}
+
+.dropdown a {
+	padding: 2px 4px;
+	text-decoration: none;
+	display: block;
+	color: #f2f2f2e1;
+	font-size: 14px;
+}
+
+.dropdown a:hover {
+	color: white;
+	background-color: #355959;
+}
+
+.dropdown-container:hover .ddbtn {
+	color: white;
+	background-color: #355959;
+}
+
+.dropdown-container:hover .dropdown {
+	display: block;
+}
+
+/* Provides break at top of the webpage. */
+.pageblock {
+	height: 50px;
+	width: 100%;
+}
+
+/* Settings */
+
+*{
+	margin: 0;
+}
+
+.game {
+	background-color: #3C5757;
+}
+
+body {
+    font-family: arial;
+    background-color: rgb(114, 173, 173);
+    color: rgb(218, 239, 227);
+    }
+
+.boxshadow {
+	box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.digitaleffect {
+		background: #CFE5E8 url("images/digitaleffect.gif") repeat scroll 0% 0%;
+}
+
+h1 {
+	font-size: 1.3em;
+	font-weight:bold;
+}
+
+h2 {
+	font-size: 1.2em;
+	font-weight:bold;
+}
+
+/* Admin Panel */
+.panel_button {
+	background:#486969;
+	border-color: #355959;
+	border-radius: 8px;
+	border-width: 1px;
+	border-style: solid;
+	padding: 20px 16px;
+	font-size: 18px;
+	text-decoration: none;
+	margin: 5px 0px;
+}
+
+.panel_container {
+	display: flex;
+	padding: 5px
+}
+
+/* Admin Buttons */
+
+.adm-btn-link {
+	background-color: #486969;
+	border-radius: 10px;
+	text-decoration: none;
+	padding: 10px;
+	margin: 2px;
+	color:rgb(218, 239, 227);
+	float: right;
+	border-style: solid;
+	border-width: 2px;
+	border-color:#324A4A
+}
+
+.adm-btn-link:hover {
+	color: white;
+	background-color:#568080;
+}
+
+/* Admin Message Flashes */
+
+.message {
+	background-color: #486969;
+	border-color:rgba(0, 0, 0, 0.1);
+	border-width: 1px;
+	border-radius: 8px;
+	border-style: solid;
+	margin-bottom: 10px;
+	padding: 10px;
+	width: auto;
+	font-size: 14px;
+}
+
+/* User Database */
+
+.user-container {
+	border: 2px solid #324A4A; 
+	display: inline-block; 
+	width: 908px; 
+	padding: 4px; 
+	margin-top: -2px;
+}
+
+/* Storylet Database */
+
+.storylet-column {
+	padding: 20px;
+	float: left;
+}
+
+.storylet-tag {
+	background-color:#486969;
+	border-bottom: #324A4A solid 2px;
+	cursor: pointer;
+	padding: 4px;
+	margin-bottom: 2px;
+	width: 100%;
+	color: rgb(218, 239, 227);
+	transition: 0.4s;
+}
+
+.active, .storylet-tag:hover {
+	background-color:#568080;
+	color: white;
+}
+
+.storylet-tag-lst {
+	background-color: #486969;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.2s ease-out;
+}
+
+.storylet {
+	border-color:#324A4A;
+	background-color:#486969;
+	border-style: solid;
+	width: auto;
+	display: grid;
+	grid-template-columns: 80px 245px;
+	grid-template-rows: auto auto;
+	margin-top: -3px;
+	text-decoration: none;
+	color: rgb(218, 239, 227);
+}
+
+.storylet:hover {
+	background-color:#568080;
+}
+
+
+.recent-left {
+	padding: 5px;
+}
+
+.recent-right {
+	padding: 5px;
+	padding-left: 0px;
+}
+
+.recent-image-cont {
+	background:#CFE5E8;
+	border:#324A4A;
+	border-style: solid;
+	border-width: 3px;
+	width: 55px;
+	height: 71.5px;
+}
+
+.recent-text {
+	width: 220px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.long-text {
+	width: 645px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.recent-divider {
+	border-top-width: 1px;
+	border-top-color:rgb(218, 239, 227);
+	border-top-style: dashed;
+	margin: 2px;
+}
+
+.recent-description {
+	font-style: italic;
+	font-size: 11px;
+	width: 220px;
+	height: 40px;
+	overflow: hidden;
+}

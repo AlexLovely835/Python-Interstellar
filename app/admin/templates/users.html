@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interstellar</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}">
+	<script src="https://kit.fontawesome.com/22f5ccdbef.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="{{ url_for('admin.static', filename='javascript/admin.js')}}"></script>
+</head>
+<body>
+{% include 'navbar.html' %}
+<div class="pageblock"></div>
+<div style="width: 960px; margin: auto;">
+    {% include 'flash_notifs.html' %}    
+    <div style="padding: 20px;" class="game boxshadow">
+        <a class="adm-btn-link" href="{{ url_for('admin.create_user') }}"><div><i class="fa-solid fa-user-plus"></i></div></a>
+        <h2>User Database</h2>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>{{ form.q.label }} {{ form.q(size=32) }} {{ form.submit() }}</p>
+        </form>
+        <p style="margin-bottom: 12px"></p>
+        <div id="userdb" style="display: relative;">
+            {% for user in listing %}
+            <div class="user-container">
+                <a class="adm-btn-link" href="{{ url_for('admin.edit_user', id=user.id) }}"><div><i class="fa-solid fa-user-pen"></i></div></a>
+                {% if user.id != 1 %}<a class="adm-btn-link confirmation" href="{{ url_for('admin.delete_user', id=user.id) }}"><div><i class="fa-solid fa-user-minus"></i></div></a>{% endif %}
+                <p style="font-weight: bold; font-size: 16px;">Username: {{ user.username}}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Last Online: {{ user.last_online}}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="margin-top: 10px; margin-bottom: 20px;" class="pagination">
+            {% if result %}
+                {% if listing.page != 1 %}
+                <a href="{{ url_for('admin.users', pagenum=listing.page-1, search=query) }}"><button style="float: left; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-left-long"></i></button></a>
+                    
+                {% endif %}
+                <a href="{{ url_for('admin.users', pagenum=listing.page+1, search=query) }}"><button style="float: right; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-right-long"></i></button></a>
+            {% else %}
+                {% if listing.page != 1 %}
+                <a href="{{ url_for('admin.users', pagenum=listing.page-1) }}"><button style="float: left; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-left-long"></i></button></a>
+                {% endif %}
+                <a href="{{ listing }}"><button style="float: right; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-right-long"></i></button></a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+    <script>
+        var elems = document.getElementsByClassName('confirmation');
+        var confirmIt = function(e) {
+            if (!confirm('Delete this user?')) e.preventDefault();
+        };
+        for (var i = 0, l = elems.length; i < l; i++) {
+            elems[i].addEventListener('click', confirmIt, false);
+        }
+    </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,40 @@
+            <div class="storylet">
+                <div>
+                    <div id="imgcontainer" class="boxshadow">
+                        <center><img src= "{{ url_for('static', filename='images/' + storylet.image) }}" class ="digitaleffect"></center>
+                    </div>
+                </div>
+                <div>
+                    <div id="storytext">
+                        <h1>{{ storylet.title }}</h1>
+                        <p style="margin-top: 5px;">{{ storylet.description }}</p>
+                    </div>
+                </div>
+            </div> 
+            {% for branch in storylet.branches %}
+            <div id="branch">
+                <div class="branch-top">
+                    <div class="branch-margin">
+                        <img width="40" src="{{ url_for('static', filename='images/' + branch.image) }}" class="digitaleffect boxshadow">
+                    </div>
+                    <div>
+                        <div id="storytext">
+                            <h2 class="branch-margin">{{ branch.title }}</h2>
+                            <p>{{ branch.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="branch-divider">
+                <div class="branch-footer">
+                    <div>
+
+                    </div>
+                    <div class="button-container">
+                        <button class="button" onclick="callResult({{ branch.id }})">{{ branch.button_text }}</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% if storylet.escapable %}
+            <button class="button" onclick="returnToHome()">perhaps not</button>            
+            {% endif %}

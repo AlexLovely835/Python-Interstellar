@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interstellar</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="pageblock"></div>
+    <div class="wrapper">
+        <div>
+            <div id="title-bar" class="boxshadow">
+                <h1 class="title">INTERSTELLAR</h1>
+            </div>
+        </div>
+          <div>
+            <div id="location-bar" class="boxshadow">
+                <h1 class="location">Login</h1>
+            </div>
+        </div>
+        <div id="left_side"></div>
+        <div id="story" class="boxshadow game">
+            <div style="display: flex;">
+                <div style="margin-right: 40px;">
+                    <h2>Interstellar</h2>
+                    <p style="text-align: justify;">Over a thousand years in the future, the United Alliance of Earth harbors dark secrets as it fights for control of the solar system against a race of humanoid aliens. Explore the solar system, work with whoever you'd like and make a name for yourself in this expansive science fiction world.</p>
+                </div>
+                <div class="login-box">
+                    <form action="" method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        <p>
+                            {{ form.username.label }}<br>
+                            {{ form.username(size=32) }}<br>
+                            {% for error in form.username.errors %}
+                            <span style="color: white;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p style="margin-top: 10px">
+                            {{ form.password.label }}<br>
+                            {{ form.password(size=32) }}<br>
+                            {% for error in form.password.errors %}
+                            <span style="color: white;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p style="margin-top: 10px">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+                        <p style="margin-top: 10px">{{ form.submit() }}</p>
+                    </form>
+                    <hr class="branch-divider">
+                    <div class="branch-footer">
+                        <p>New User?</p><a href="{{ url_for('auth.register') }}">Register here!</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="branch-divider">
+            <div class="branch-footer">
+                <p>Created by: Alex L. Dylan Y. and Wes L.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+      {% for message in messages %}
+        <div class="message boxshadow">
+            {{ message }}
+            <i style="float: right;" class="fa-solid fa-xmark" onclick=delete_flash(this)></i>
+        </div>
+      {% endfor %}
+   {% endif %}
+{% endwith %}

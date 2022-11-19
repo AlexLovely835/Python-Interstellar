@@ -6,16 +6,54 @@
 	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 
 	<script>
-		function makeId(num) {
+		function callStorylet(num) {
 			id = String(num);
-			$.ajax("{{ url_for('go') + '?id=' }}" + id).done(function (reply) {
+			$.ajax("{{ url_for('game.storylet') + '?id=' }}" + id).done(function (reply) {
+					$('#story').html(reply);
+				}); 
+		};
+		function callResult(num) {
+			id = String(num);
+			$.ajax("{{ url_for('game.results') + '?id=' }}" + id).done(function (reply) {
+					$('#story').html(reply);
+				}); 
+		};
+		function returnToHome() {
+			$.ajax("{{ url_for('game.game') }}").done(function (reply) {
 					$('#story').html(reply);
 				}); 
 		};
 
+		function cardDraw() {
+		if(document.getElementById('slot-1').className == "card-slot") {
+			$.ajax("{{ url_for('game.draw') + '?slot=1'}}").done(function (reply) {
+				$('#card-1').html(reply);
+					}); 
+				};
+		if(document.getElementById('slot-2').className == "card-slot") {
+			$.ajax("{{ url_for('game.draw') + '?slot=2'}}").done(function (reply) {
+				$('#card-2').html(reply);
+					}); 
+				};
+		if(document.getElementById('slot-3').className == "card-slot") {
+			$.ajax("{{ url_for('game.draw') + '?slot=3'}}").done(function (reply) {
+				$('#card-3').html(reply);
+					}); 
+				};
+			};
+		
+		window.onmousemove = function (e) {
+			var x = (e.clientX + 20) + 'px',
+				y = (e.clientY + 20) + 'px';
+			for (var i = 0; i < tooltips.length; i++) {
+				tooltips[i].style.top = y;
+				tooltips[i].style.left = x;
+			};
+		};
 	</script>
 </head>
-<body>
+<body onload="returnToHome()">
+{% include 'navbar.html' %}
 <div class="pageblock"></div>
 <div class="wrapper">
 	<div>
@@ -23,12 +61,12 @@
 			<h1 class="title">INTERSTELLAR</h1>
 		</div>
 	</div>
-  <div>
+  	<div>
 		<div id="location-bar" class="boxshadow">
 			<h1 class="location">Location</h1>
 		</div>
 	</div>
-  <div>
+  	<div id="left_side">
 		<div id="sidebar" class= "boxshadow game">
 			<p>Content goes here.</p>
 		</div>
@@ -41,7 +79,6 @@
 	</div>
   <div>
 		<div id="story" class= "boxshadow game">
-			{% include 'game.html' %}
 		</div>
 </div>
 </body>
