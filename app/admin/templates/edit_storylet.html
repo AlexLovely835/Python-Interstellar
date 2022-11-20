@@ -13,7 +13,22 @@
     <div style="width: 960px; margin: auto;">
         {% include 'flash_notifs.html' %}
         <div style="padding: 20px;" class="game boxshadow">
-            
+            <a class="adm-btn-link" href="{{ url_for('admin.storylets') }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
+            <div class="storylet-core">
+                <div class="header">Core Storylet ID #{{ storylet.id }} Created by {{ storylet.author.username }}</div>
+                <div class="storylet-body">
+                    <div>Test 1</div>
+                    <div>
+                        {{ form.title(size=40) }}
+                        {{ form.description(class='desc-area') }}
+                        {{ form.notes(class='note-area')}}
+                        <a class="adm-btn-link" href="#save-storylet"><div>Save</div></a>
+                    </div>
+                    <div>Test 3</div>
+                    <div>Test 4</div>
+                    <div>Test 5</div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

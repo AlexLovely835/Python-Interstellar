@@ -79,11 +79,12 @@
 	background-color: #3C5757;
 }
 
+/* Grid Layout */
 body {
-    font-family: arial;
-    background-color: rgb(114, 173, 173);
-    color: rgb(218, 239, 227);
-    }
+	font-family: arial;
+	background: black url("images/background.png") no-repeat;
+	color: rgb(218, 239, 227);
+	}
 
 .boxshadow {
 	box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.4);
@@ -258,4 +259,44 @@ h2 {
 	width: 220px;
 	height: 40px;
 	overflow: hidden;
+}
+
+/* Storylet Editing */
+
+.header {
+	margin-top: 60px;
+	padding: 5px;
+	background-color:rgba(188,218,218,0.35);
+	width: 655px;
+	height: auto;
+	font-size: 9px;
+	font-weight: bold;
+	border-color: #324A4A;
+	border-style: solid;
+	border-width: 1px;
+	border-bottom: 0px;
+	border-radius: 8px 8px 0px 0px;
+}
+
+.storylet-body {
+	display: grid;
+	grid-template-columns: 120px 280px 80px 120px 308px;
+	padding: 5px;
+	padding-top: 15px;
+	background-color:#486969;
+	border-color: #324A4A;
+	border-style: solid;
+	border-width: 1px;
+}	
+
+.desc-area {
+	width: 261px; 
+	height: 166px;
+	margin-top: 3px;
+}
+
+.note-area {
+	width: 261px;
+	height: 40px;
+	margin-top: 3px;
 }

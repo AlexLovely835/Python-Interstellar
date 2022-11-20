@@ -23,7 +23,8 @@ def storylets():
         tag_list = db.session.query(Storylet.tag.distinct().label("tag")).all()
         tags = []
         for tag in tag_list:
-            tag = str(tag).replace('(', '').replace(')', '').replace(',', '')
+            print(tag)
+            tag = str(tag).replace('(', '').replace(')', '').replace(',', '').replace("'", "")
             if tag == 'None':
                 tags.append(Tag(None))
             else:
@@ -87,7 +88,7 @@ def users(pagenum):
             users = db.session.query(User).order_by(User.last_online.desc()).all()
 
         # Determine if the next page exists
-        if len(users) <= (int(pagenum)-1) * 5:
+        if len(users) <= (int(pagenum)-1) * 20:
             return redirect(url_for('admin.users', pagenum=int(pagenum)-1, search=search))
 
         #Determine if a search result yields no result

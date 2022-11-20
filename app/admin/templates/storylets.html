@@ -22,7 +22,7 @@
             <div class="storylet-tag-lst">
                 {% for storylet in tag.q_list %}
                     <div>
-                        <a class= "storylet" style="grid-template-columns: 80px 695px;" href="{{ url_for('admin.edit-storylet', id=storylet.id) }}">
+                        <a class= "storylet" style="grid-template-columns: 80px 695px;" href="{{ url_for('admin.edit_storylet', id=storylet.id) }}">
                             <div class="recent-left">
                                 <div class="recent-image-cont">
                                     <center><img style="width: 55px;" class="digitaleffect" src="{{ url_for('static', filename='images/' + storylet.image) }}" width="80px"></center>
@@ -57,7 +57,7 @@
                 <p class="recent-text" style="font-size: 10px;"><em>edited by {{ storylet.author.username }}</em></p>
                 <p class="recent-text" style="font-size: 10px;"><em>{{ storylet.last_edit.strftime("%b %d, %Y %I:%M %p UTC") }}</em></p>
                 <hr class="recent-divider">
-                <p class="recent-description">"{{ storylet.description }}"</p>
+                <p class="recent-text" style="font-size: 12px;"><em>"{{ storylet.description }}"</em></p>
             </div>
             </a> 
         </div>

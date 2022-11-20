@@ -3,7 +3,7 @@ from app import db
 from app.models import Storylet
 
 class PageResult():
-    def __init__(self, data, page=1, number=5):
+    def __init__(self, data, page=1, number=20):
         self.__dict__ = dict(zip(['data', 'page', 'number'], [data, page, number]))
         self.full_listing = [self.data[i:i+number] for i in range(0, len(self.data), number)]
 
@@ -29,8 +29,8 @@ def defaultStorylet():
         description=None,
         deck="Always",
         area="All",
-        Urgency="Normal",
-        Order=0,
+        urgency="Normal",
+        order=0,
         notes=None,
         escapable=True,
         tag=None

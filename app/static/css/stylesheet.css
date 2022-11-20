@@ -91,7 +91,7 @@ h2 {
 /* Grid Layout */
 body {
 font-family: arial;
-background-color: rgb(114, 173, 173);
+background: black url("images/background.png") no-repeat;
 color: rgb(218, 239, 227);
 }
 
