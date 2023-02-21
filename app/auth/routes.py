@@ -5,6 +5,7 @@ from flask import redirect, url_for, render_template, flash
 from app.auth.forms import LoginForm, RegistrationForm
 from app.models import User
 
+# Renders the login page and retrieves data sent from the login form.
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -19,12 +20,14 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html', form=form)
 
+# Logs the user out returns them to the main page.
 @bp.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
+# Renders the registration page and retrieves the data sent from the registration form.
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:

@@ -11,25 +11,176 @@
     {% include 'navbar.html' %}
     <div class="pageblock"></div>
     <div style="width: 960px; margin: auto;">
+        <div id="flash-container">
         {% include 'flash_notifs.html' %}
+        </div>
         <div style="padding: 20px;" class="game boxshadow">
             <a class="adm-btn-link" href="{{ url_for('admin.storylets') }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
             <div class="storylet-core">
-                <div class="header">Core Storylet ID #{{ storylet.id }} Created by {{ storylet.author.username }}</div>
-                <div class="storylet-body">
-                    <div>Test 1</div>
+                <div style="margin-top: 50px;" class="header boxshadow">Core Storylet ID #{{ storylet.id }} Created by {{ storylet.author.username }}</div>
+                <div class="storylet-body boxshadow">
+                    <form id="core-form" class="form1-body" action="" method="POST">
                     <div>
-                        {{ form.title(size=40) }}
-                        {{ form.description(class='desc-area') }}
-                        {{ form.notes(class='note-area')}}
-                        <a class="adm-btn-link" href="#save-storylet"><div>Save</div></a>
+                        <div class="storylet-img-cont">
+                            <img class="digitaleffect" src="{{ url_for('static', filename='images/' + storylet.image) }}">
+                        </div>
+                        {{ form.image(size=13, style='margin-top: 5px;', id='s-image') }}
+                        <a class="adm-btn-link" style="float: left;" href="#find-image"><div>Find Image</div></a>
                     </div>
-                    <div>Test 3</div>
-                    <div>Test 4</div>
-                    <div>Test 5</div>
+                    <div>
+                        {{ form.title(size=40, id='s-title') }}
+                        {{ form.description(class='desc-area', id='s-desc') }}
+                        {{ form.notes(class='note-area', id='s-notes')}}
+                        <input id="core-submit" class='adm-btn-link' style="margin-right: 10px;" name="submit" type="submit" value="Save Changes">
+                    </div>
+                    <div>
+                        <p class="labels">{{ form.urgency.label }}:</p>
+                        <p class="labels">{{ form.deck.label }}:</p>
+                        <p class="labels">{{ form.area.label }}:</p>
+                        <p class="labels">{{ form.tag.label }}:</p>
+                        <p class="labels">{{ form.order.label }}:</p>
+                        <p class="labels">{{ form.escapable.label }}:</p>
+                    </div>
+                    <div>
+                        <p class="form-fields">{{ form.urgency }}</p>
+                        <p class="form-fields">{{ form.deck }}</p>
+                        <p class="form-fields">{{ form.area }}</p>
+                        <p class="form-fields">{{ form.tag(size=10) }}</p>
+                        <p class="form-fields">{{ form.order(size=10, id='s-order') }}</p>
+                        {% if storylet.escapable %}
+                        <p class="form-fields">{{ form.escapable(id='s-escapable', checked=True) }}</p>
+                        {% else %}
+                        <p class="form-fields">{{ form.escapable(id='s-escapable', checked=False) }}</p>
+                        {% endif %}
+                    </div>
+                    </form>
+                    <div>Quality Section</div>
                 </div>
+            </div>
+            <div class="branch-core">
+                {% for branch in storylet.branches %}
+                <div style="width: 605px;" class="header boxshadow">Branch ID #{{branch.id}}</div>
+                <div class="branch-body boxshadow">
+                    <form id="branch-{{ branch.id }}" class="branch-form1" action="" method="POST">
+                        <div>
+                            <div class="branch-img-cont">
+                                <img style="width: 50px;" class="digitaleffect" src="{{ url_for('static', filename='images/' + branch.image) }}">
+                            </div>
+                            <input id="image-{{ branch.id }}" style="margin-top: 5px;" type="text" value="{{ branch.image }}" size="5">
+                            <a class="adm-btn-link" style="float: left;" href="#find-image"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        </div>
+                        <div>
+                            <input id="title-{{ branch.id }}" type="text" value="{{ branch.title }}" size="40">
+                            <textarea style="height: 120px;" id="desc-{{ branch.id }}" class="desc-area">{{ branch.description }}</textarea>
+                            <textarea id="notes-{{ branch.id }}" class="note-area">{% if branch.notes != None %}{{ branch.notes }}{% endif %}</textarea>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Button Text:</b> <input id="btntxt-{{ branch.id }}" type="text" value="{{ branch.button_text }}" size="28"></p>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Order:</b> <input id="order-{{ branch.id }}" min="0" type="number" value="{{ branch.order }}" size="10"></p>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Action Cost:</b> <input id="action_cost-{{ branch.id }}" min="0" type="number" value="{{ branch.action_cost }}" size="10"></p>
+                            <input id="core-submit" class='adm-btn-link' style="margin-right: 10px;" name="submit" type="submit" value="Save Changes">
+                        </div>
+                    </form>
+                    <div>
+                        Quality Section
+                    </div>
+                </div>
+                <script>
+                    $(document).on('submit','#branch-{{ branch.id }}', function(e) {
+                        e.preventDefault();
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{url_for("admin.save_branch", id= branch.id)}}',
+                            data:{
+                                title: $("#title-{{ branch.id }}").val(),
+                                description: $("#desc-{{ branch.id }}").val(),
+                                notes: $("#notes-{{ branch.id }}").val(),
+                                image: $("#image-{{ branch.id }}").val(),
+                                button_text: $("#btntxt-{{ branch.id }}").val(),
+                                order: $("#order-{{ branch.id }}").val(),
+                                action_cost: $("#action_cost-{{ branch.id }}").val()
+                            }      
+                        }).done(function (reply) {
+                                $('#flash-container').html(reply);
+                            });
+                    });
+                </script>
+                <div class="result-core">
+                    {% for result in branch.results %}
+                    <div style="width: 555px;" class="header boxshadow">Result ID #{{result.id}}</div>
+                    <div class="result-body boxshadow">
+                        <form id="result-{{ result.id }}" class="result-form1" action="" method="POST">
+                            <input id="title-r-{{ result.id }}" type="text" value="{{ result.title }}" size="40">
+                            <textarea style="height: 120px;" id="desc-r-{{ result.id }}" class="desc-area">{{ result.description }}</textarea>
+                            <textarea id="notes-r-{{ result.id }}" class="note-area">{% if result.notes != None %}{{ result.notes }}{% endif %}</textarea>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Type:</b> 
+                            <select id="type-r-{{ result.id }}">
+                                <option value="General" {% if result.type == "General" %}selected{% endif %}>General</option>
+                                <option value="Success" {% if result.type == "Success" %}selected{% endif %}>Success</option>
+                                <option value="Fail" {% if result.type == "Fail" %}selected{% endif %}>Fail</option>
+                                <option value="Random" {% if result.type == "Random" %}selected{% endif %}>Random</option>
+                              </select>
+                            </p>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Area Change:</b> 
+                                <select id="area_change-r-{{ result.id }}">
+                                    <option value="temp">Temp</option>
+                                  </select>
+                            </p>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Next ID:</b> <input id="next_id-r-{{ result.id }}" min="0" type="number" value="{{ result.next_id }}" size="10"></p>
+                            <p style="margin-top: 3px;"><b style="font-size: 12px;">Random Weight:</b> <input id="random_weight-r-{{ result.id }}" min="0" max= "100" type="number" value="{{ result.random_weight }}" size="10"></p>
+                            <input id="core-submit" class='adm-btn-link' style="margin-right: 10px;" name="submit" type="submit" value="Save Changes">
+                        </form>
+                        <div>
+                            Quality Section
+                        </div>
+                    </div>
+                    <script>
+                        $(document).on('submit','#result-{{ result.id }}', function(e) {
+                            e.preventDefault();
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{url_for("admin.save_result", id= result.id)}}',
+                                data:{
+                                    title: $("#title-r-{{ result.id }}").val(),
+                                    description: $("#desc-r-{{ result.id }}").val(),
+                                    notes: $("#notes-r-{{ result.id }}").val(),
+                                    type: $("#type-r-{{ result.id }}").val(),
+                                    area_change: $("#area_change-r-{{ result.id }}").val(),
+                                    next_id: $("#next_id-r-{{ result.id }}").val(),
+                                    random_weight: $("#random_weight-r-{{ result.id }}").val()
+                                }      
+                            }).done(function (reply) {
+                                $('#flash-container').html(reply);
+                            });
+                        });
+                    </script>
+                    {% endfor %}
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
+    <script>
+
+        $(document).on('submit','#core-form', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{{url_for("admin.save_storylet", id= storylet.id)}}',
+                data:{
+                    title: $("#s-title").val(),
+                    description: $("#s-desc").val(),
+                    notes: $("#s-notes").val(),
+                    image: $("#s-image").val(),
+                    urgency: $("#urgency").val(),
+                    deck: $("#deck").val(),
+                    area: $("#area").val(),
+                    tag: $("#tag").val(),
+                    order: $("#s-order").val(),
+                    escapable: $('#s-escapable').is(":checked")
+                }      
+            }).done(function (reply) {
+                                $('#flash-container').html(reply);
+                            });
+        });
+    </script>
 </body>
 </html>

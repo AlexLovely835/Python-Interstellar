@@ -39,7 +39,7 @@ class Storylet(db.Model):
     escapable = db.Column(db.Boolean)
     tag = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    last_edit = db.Column(db.DateTime, default=datetime.utcnow)
+    last_edit = db.Column(db.DateTime, default=datetime.utcnow())
     last_editor = db.Column(db.String)
 
     def __repr__(self):
@@ -52,3 +52,19 @@ class Branch(db.Model):
     description = db.Column(db.Text)
     button_text = db.Column(db.String)
     storylet_id = db.Column(db.Integer, db.ForeignKey('storylet.id'))
+    results = db.relationship('Result', backref='parent_branch', lazy='dynamic')
+    notes = db.Column(db.Text)
+    order = db.Column(db.Integer)
+    action_cost = db.Column(db.Integer)
+
+class Result(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    description = db.Column(db.Text)
+    next_id = db.Column(db.Integer)
+    type = db.Column(db.String)
+    branch_id = db.Column(db.Integer, db.ForeignKey('branch.id'))
+    random_weight = db.Column(db.Integer)
+    area_change = db.Column(db.String)
+    notes = db.Column(db.String)
+

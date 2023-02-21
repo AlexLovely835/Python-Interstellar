@@ -14,7 +14,6 @@ class EditUserForm(FlaskForm):
         self.o_email = o_email
         super(EditUserForm, self).__init__(*args, **kwargs)
 
-
     def validate_username(self, username):
         if username.data != self.o_username:
             user = User.query.filter_by(username=username.data).first()
