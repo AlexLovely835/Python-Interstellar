@@ -69,7 +69,7 @@ class Storylet():
 
 
 # Temp Testing Objects
-storylet1 = Storylet(id=1, title="First Storylet", description="I am the first Storylet ever!")
+storylet1 = Storylet(id=1, title="First Storylet", description="I am the first <b>Storylet</b> ever!")
 branch1 = Branch(id=1, parent_id=1, title="Return Home", description="Go back to the main screen.")
 branch2 = Branch(id=2, parent_id=1, title="Visit Storylet 2", description="See another Storylet!")
 storylet1.populate()

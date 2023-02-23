@@ -31,18 +31,17 @@
             </div>
             {% endfor %}
         </div>
-        <div style="margin-top: 10px; margin-bottom: 20px;" class="pagination">
+        <div style="margin-top: 10px; margin-bottom: 50px;" class="pagination">
             {% if result %}
                 {% if listing.page != 1 %}
-                <a href="{{ url_for('admin.users', pagenum=listing.page-1, search=query) }}"><button style="float: left; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-left-long"></i></button></a>
-                    
+                <a class="adm-btn-link" style="float: left;" href="{{ url_for('admin.users', pagenum=listing.page-1, search=query) }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
                 {% endif %}
-                <a href="{{ url_for('admin.users', pagenum=listing.page+1, search=query) }}"><button style="float: right; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-right-long"></i></button></a>
+                <a class="adm-btn-link" style="float: right;" href="{{ url_for('admin.users', pagenum=listing.page+1, search=query) }}"><div><i class="fa-solid fa-arrow-right-long"></i></div></a>
             {% else %}
                 {% if listing.page != 1 %}
-                <a href="{{ url_for('admin.users', pagenum=listing.page-1) }}"><button style="float: left; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-left-long"></i></button></a>
+                <a class="adm-btn-link" style="float: left;" href="{{ url_for('admin.users', pagenum=listing.page-1) }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
                 {% endif %}
-                <a href="{{ listing }}"><button style="float: right; background-color: #355959; border-radius: 10px"><i class="fa-solid fa-arrow-right-long"></i></button></a>
+                <a class="adm-btn-link" style="float: right;" href="{{ listing }}"><div><i class="fa-solid fa-arrow-right-long"></i></div></a>
             {% endif %}
         </div>
     </div>

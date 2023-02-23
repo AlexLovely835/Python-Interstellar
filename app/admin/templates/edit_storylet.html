@@ -17,7 +17,7 @@
         <div style="padding: 20px;" class="game boxshadow">
             <a class="adm-btn-link" href="{{ url_for('admin.storylets') }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
             <div class="storylet-core">
-                <div style="margin-top: 50px;" class="header boxshadow">Core Storylet ID #{{ storylet.id }} Created by {{ storylet.author.username }}</div>
+                <div style="margin-top: 50px;" class="header boxshadow">Core Storylet ID #{{ storylet.id }} Created by {{ storylet.author.username }}<div style="float: right;"><a href="{{ url_for('admin.delete_storylet', id=storylet.id) }}">Delete Storylet</a></div></div>
                 <div class="storylet-body boxshadow">
                     <form id="core-form" class="form1-body" action="" method="POST">
                     <div>
@@ -59,7 +59,7 @@
             </div>
             <div class="branch-core">
                 {% for branch in storylet.branches %}
-                <div style="width: 605px;" class="header boxshadow">Branch ID #{{branch.id}}</div>
+                <div style="width: 605px;" class="header boxshadow">Branch ID #{{branch.id}}<div style="float: right;"><a href="{{ url_for('admin.delete_branch', s_id=storylet.id, b_id=branch.id) }}">Delete Branch</a></div></div>
                 <div class="branch-body boxshadow">
                     <form id="branch-{{ branch.id }}" class="branch-form1" action="" method="POST">
                         <div>
@@ -105,7 +105,7 @@
                 </script>
                 <div class="result-core">
                     {% for result in branch.results %}
-                    <div style="width: 555px;" class="header boxshadow">Result ID #{{result.id}}</div>
+                    <div style="width: 555px;" class="header boxshadow">Result ID #{{result.id}}<div style="float: right;"><a href="{{ url_for('admin.delete_result', s_id=storylet.id, r_id=result.id) }}">Delete Result</a></div></div>
                     <div class="result-body boxshadow">
                         <form id="result-{{ result.id }}" class="result-form1" action="" method="POST">
                             <input id="title-r-{{ result.id }}" type="text" value="{{ result.title }}" size="40">
@@ -153,8 +153,14 @@
                         });
                     </script>
                     {% endfor %}
+                    <div style="height: 50px;">
+                        <a class="adm-btn-link" style="float: left" href="{{ url_for('admin.create_result', s_id=storylet.id, b_id=branch.id) }}"><div><i class="fa-solid fa-plus"></i> Add Result</div></a>
+                    </div>
                 </div>
                 {% endfor %}
+                <div style="height: 50px;">
+                    <a class="adm-btn-link" style="float: left" href="{{ url_for('admin.create_branch', id=storylet.id) }}"><div><i class="fa-solid fa-plus"></i> Add Branch</div></a>
+                </div>
             </div>
         </div>
     </div>

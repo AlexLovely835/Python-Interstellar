@@ -10,11 +10,15 @@
 <body>
 {% include 'navbar.html' %}
 <div class="pageblock"></div>
-<div style="width: 1260px; margin: auto;">
+<div style="width: 960px; margin: auto;">
 {% include 'flash_notifs.html' %}  
-    <div style="width: 805px;" class=" storylet-column game boxshadow">
+    <div style="width: 550px;" class=" storylet-column game boxshadow">
         <a href="{{ url_for('admin.edit_storylet') }}" class="adm-btn-link"><div class="adm-btn">Create New Storylet</div></a>
-        <a href="#" class="adm-btn-link"><div class="adm-btn">My Storylets</div></a>
+        {% if tab == 'all' %}
+        <a href="{{ url_for('admin.storylets', tab='user') }}" class="adm-btn-link"><div class="adm-btn">My Storylets</div></a>
+        {% else %}
+        <a href="{{ url_for('admin.storylets') }}" class="adm-btn-link"><div class="adm-btn">All Storylets</div></a>
+        {% endif %}
         <h2 style="margin-bottom: 40px;">Storylet Database</h2>
         <div id="all-storylets-panel">
             {% for tag in tags %}
@@ -32,7 +36,7 @@
                                 <p style="float: right; margin-right: 10px;"><bold><em>Id: {{ storylet.id }}</em></bold></p>
                                 <p class="long-text"><bold>{{ storylet.title }}</bold></p>
                                 <p class="long-text" style="font-size: 10px;"><em>Created by {{ storylet.author.username }}</em></p>
-                                <hr class="recent-divider">
+                                <hr class="recent-divider long-text">
                                 <p class="long-text" style="width: 670; font-size: 12px; font-style: italic;">"{{ storylet.description }}"</p>
                             </div>
                         </a> 
@@ -42,7 +46,7 @@
             {% endfor %}
         </div>
     </div>
-    <div style="margin-left: 20px; width: 355px;" class="storylet-column game boxshadow">
+    <div style="margin-left: 20px; width: 310px;" class="storylet-column game boxshadow">
         <h2 style="margin-bottom: 8px">Recent Edits</h2>
         {% for storylet in recents %}
         <div id="recent-storylet-panel">
@@ -56,7 +60,7 @@
                 <p class="recent-text"><bold>{{ storylet.title }}</bold></p>
                 <p class="recent-text" style="font-size: 10px;"><em>edited by {{ storylet.author.username }}</em></p>
                 <p class="recent-text" style="font-size: 10px;"><em>{{ storylet.last_edit.strftime("%b %d, %Y %I:%M %p UTC") }}</em></p>
-                <hr class="recent-divider">
+                <hr class="recent-divider recent-text">
                 <p class="recent-text" style="font-size: 12px;"><em>"{{ storylet.description }}"</em></p>
             </div>
             </a> 

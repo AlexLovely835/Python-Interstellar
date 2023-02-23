@@ -10,6 +10,9 @@
 <body>
     {% include 'navbar.html' %}
     <div class="pageblock"></div>
+    <div id="flash-container" style="width: 960px; margin: auto;">
+        {% include 'flash_notifs.html' %}
+    </div>
     <div style="padding: 20px; width: 960px; margin: auto;" class="game boxshadow">
         <a class="adm-btn-link" href="{{ url_for('admin.users', pagenum=1) }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
         <h2>Creating New User</h2>

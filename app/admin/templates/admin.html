@@ -4,10 +4,14 @@
 	<title>Interstellar</title>
     <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}">
 	<script src="https://kit.fontawesome.com/22f5ccdbef.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('admin.static', filename='javascript/admin.js')}}"></script>
 </head>
 <body>
     {% include 'navbar.html' %}
     <div class="pageblock"></div>
+    <div id="flash-container" style="width: 960px; margin: auto;">
+        {% include 'flash_notifs.html' %}
+    </div>
     <div style="padding: 20px; width: 960px; margin: auto;" class="game boxshadow">
     Welcome {{ current_user.username }}!
     <hr class="branch-divider">
@@ -15,7 +19,7 @@
             <a href="{{ url_for('admin.users', pagenum=1) }}"><button class="panel_button"><i class="fa-solid fa-users"></i>Users</button></a>
             <a href="{{ url_for('admin.storylets') }}"><button class="panel_button"><i class="fa-solid fa-book"></i>Storylets</button></a>
             <button class="panel_button"><i class="fa-solid fa-icons"></i>Qualities</button>
-            <button class="panel_button"><i class="fa-solid fa-images"></i>Images</button>
+            <a href="{{ url_for('admin.images') }}"></a><button class="panel_button"><i class="fa-solid fa-images"></i>Images</button></a>
         </div>
     </div>
 </body>

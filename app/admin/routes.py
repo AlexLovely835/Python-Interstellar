@@ -1,11 +1,13 @@
+import os
 from app.admin import bp
-from app import db
+from app import db, app
 from datetime import datetime
+from werkzeug.utils import secure_filename
 from flask import redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
-from app.models import User, Storylet, Branch, Result
+from app.models import User, Storylet, Branch, Result, Image
 from app.admin.forms import EditUserForm, CreateUserForm, SearchForm, StoryletForm
-from app.admin.classes import PageResult, Tag, defaultStorylet
+from app.admin.classes import PageResult, Tag, defaultStorylet, defaultBranch, defaultResult, allowed_file
 
 @bp.route('/')
 @login_required
@@ -19,21 +21,36 @@ def admin():
 @login_required
 def storylets():
     if current_user.privilege_level > 1:
+        tab = request.args.get('tab', 'all', type=str)
+
 
         #Construct a list of Tags and their Storylets
-        tag_list = db.session.query(Storylet.tag.distinct().label("tag")).all()
         tags = []
-        for tag in tag_list:
-            tag = str(tag).replace('(', '').replace(')', '').replace(',', '').replace("'", "")
-            if tag == 'None':
-                tags.append(Tag(None))
-            else:
-                tags.append(Tag(tag))
+        if tab == 'all':
+            tag_list = db.session.query(Storylet.tag.distinct().label("tag")).all()
+        
+            for tag in tag_list:
+                tag = str(tag).replace('(', '').replace(')', '').replace(',', '').replace("'", "")
+                if tag == 'None':
+                    tags.append(Tag(None, 0))
+                else:
+                    tags.append(Tag(tag, 0))
+        elif tab == 'user':
+            tag_list = db.session.query(Storylet.tag.distinct().label("tag")).filter(Storylet.user_id == current_user.id).all()
+
+            for tag in tag_list:
+                tag = str(tag).replace('(', '').replace(')', '').replace(',', '').replace("'", "")
+                if tag == 'None':
+                    tags.append(Tag(None, current_user.id))
+                else:
+                    tags.append(Tag(tag, current_user.id))
+
+        tags.sort()
 
         #Grab a list of the most recently edited Storylets
-        recents = db.session.query(Storylet).order_by(Storylet.last_edit).limit(5).all()
+        recents = db.session.query(Storylet).order_by(Storylet.last_edit.desc()).limit(5).all()
 
-        return render_template('storylets.html', recents=recents, tags=tags)
+        return render_template('storylets.html', recents=recents, tags=tags, tab=tab)
     else:
         return redirect(url_for('index'))
 
@@ -47,8 +64,8 @@ def edit_storylet():
             storylet = defaultStorylet()
             storylet.user_id = current_user.id
             db.session.add(storylet)
-            db.commit()
-            storylet = db.session.query(Storylet).order_by(Storylet.last_edit).limit(1).all()
+            db.session.commit()
+            storylet = db.session.query(Storylet).get(storylet.id)
         else:
             storylet = db.session.query(Storylet).get(id)
         form.title.data = storylet.title
@@ -77,7 +94,12 @@ def save_storylet():
     storylet.urgency = request.form.get("urgency")
     storylet.deck = request.form.get("deck")
     storylet.area = request.form.get("area")
-    storylet.tag = request.form.get("tag")
+    tag = request.form.get("tag")
+    tag.strip()
+    if tag == "":
+        storylet.tag = None
+    else:
+        storylet.tag = request.form.get("tag")
     if request.form.get("order") != '':
         storylet.order = int(request.form.get("order"))
     else:
@@ -140,6 +162,74 @@ def save_result():
     flash("Your changes have been saved.")
     return redirect(url_for('flash_notifs'))
 
+@bp.route('/create_branch', methods=['GET', 'POST'])
+@login_required
+def create_branch():
+    id = request.args.get('id', type=int)
+    branch = defaultBranch()
+    branch.storylet_id = id
+    db.session.add(branch)
+    db.session.commit()
+    return redirect(url_for('admin.create_result', s_id=id, b_id=branch.id))
+
+@bp.route('/create_result', methods=['POST', 'GET'])
+@login_required
+def create_result():
+    s_id = request.args.get('s_id', type=int)
+    b_id = request.args.get('b_id', type=int)
+    result = defaultResult()
+    result.branch_id = b_id
+    db.session.add(result)
+    db.session.commit()
+    return redirect(url_for('admin.edit_storylet', id = s_id))
+
+@bp.route('/delete_storylet', methods=['POST', 'GET'])
+@login_required
+def delete_storylet():
+    if current_user.privilege_level > 1:
+        id = request.args.get('id', type=int)
+        storylet = db.session.query(Storylet).get(id)
+        for branch in storylet.branches:
+            for result in branch.results:
+                db.session.delete(result)
+            db.session.delete(branch)
+        db.session.delete(storylet)
+        db.session.commit()
+        flash("Storylet deleted.")
+        return redirect(url_for('admin.storylets'))
+    else:
+        return redirect(url_for('index'))
+    
+@bp.route('/delete_branch', methods=['POST', 'GET'])
+@login_required
+def delete_branch():
+    if current_user.privilege_level > 1:
+        s_id = request.args.get('s_id', type=int)
+        b_id = request.args.get('b_id', type=int)
+        branch = db.session.query(Branch).get(b_id)
+        for result in branch.results:
+            db.session.delete(result)
+        db.session.delete(branch)
+        db.session.commit()
+        flash("Branch deleted.")
+        return redirect(url_for('admin.edit_storylet', id=s_id))
+    else:
+        return redirect(url_for('index'))
+    
+@bp.route('/delete_result', methods=['POST', 'GET'])
+@login_required
+def delete_result():
+    if current_user.privilege_level > 1:
+        s_id = request.args.get('s_id', type=int)
+        r_id = request.args.get('r_id', type=int)
+        result = db.session.query(Result).get(r_id)
+        db.session.delete(result)
+        db.session.commit()
+        flash("Result deleted.")
+        return redirect(url_for('admin.edit_storylet', id=s_id))
+    else:
+        return redirect(url_for('index'))
+
 @bp.route('/users/<pagenum>', methods=['GET', 'POST'])
 @login_required
 def users(pagenum):
@@ -192,7 +282,6 @@ def create_user():
     else:
         return redirect(url_for('index'))
 
-
 @bp.route('/edit_user', methods=['GET', 'POST'])
 @login_required
 def edit_user():
@@ -225,5 +314,44 @@ def delete_user():
         db.session.commit()
         flash("User deleted.")
         return redirect(url_for('admin.users', pagenum=1))
+    else:
+        return redirect(url_for('index'))
+    
+@bp.route('/images', methods=['GET', 'POST'])
+@login_required
+def images():
+    if current_user.privilege_level > 1:
+        if request.method == 'POST':
+            if 'file' not in request.files:
+                flash("No file uploaded.")
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                flash("No file selected.")
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                flash("File successfully uploaded.")
+                new_image = Image(name=str(filename))
+                db.session.add(new_image)
+                db.session.commit()
+        image = db.session.query(Image).order_by(Image.name).all()
+        return render_template('images.html', images=image)
+    else:
+        return redirect(url_for('index'))
+
+@bp.route('/delete_image', methods=['GET', 'POST'])
+@login_required
+def delete_image():
+    if current_user.privilege_level > 1:
+        id = request.args.get('id', type=int)
+        image = db.session.query(Image).get(id)
+        flash("Image '{}' successfully deleted.".format(image.name))
+        os.remove(os.path.join(app.config['UPLOAD_PATH'], image.name))
+        db.session.delete(image)
+        db.session.commit()
+        
+        return redirect(url_for('admin.images'))
     else:
         return redirect(url_for('index'))

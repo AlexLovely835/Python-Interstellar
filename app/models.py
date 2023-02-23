@@ -68,3 +68,6 @@ class Result(db.Model):
     area_change = db.Column(db.String)
     notes = db.Column(db.String)
 
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
