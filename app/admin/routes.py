@@ -329,6 +329,10 @@ def images():
             if file.filename == '':
                 flash("No file selected.")
                 return redirect(request.url)
+            for images in db.session.query(Image).all():
+                if file.filename == images.name:
+                    flash("Duplicate image title.")
+                    return redirect(request.url)
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_PATH'], filename))

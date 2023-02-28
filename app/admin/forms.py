@@ -53,7 +53,7 @@ class StoryletForm(FlaskForm):
     description = TextAreaField('Description')
     notes = TextAreaField('Notes')
     urgency = SelectField('Urgency', choices=['Low', 'Normal', 'Moderate', 'High'])
-    deck = SelectField('Deck', choices=['Temp'])
+    deck = SelectField('Deck', choices=['Pinned', 'Deck', "Unobtainable"])
     area = SelectField('Area', choices=['Temp'])
     tag = StringField('Tag')
     order = IntegerField('Order', validators=[NumberRange(min=0)])

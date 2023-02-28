@@ -32,5 +32,5 @@
     </div>
 </div>
 <div  style="text-align: right;" >
-    <button class="button" onclick="{% if result.next == 0 %} returnToHome() {% else %} callStorylet({{ result.next }}) {% endif %}">onward</button> 
+    <button class="button" onclick="{% if result.next_id == 0 %} returnToHome() {% else %} callStorylet({{ result.next_id }}) {% endif %}">onward</button> 
 </div>

@@ -50,25 +50,19 @@
 	function returnToHome() {
 		$.ajax("{{ url_for('game.game') }}").done(function (reply) {
 				$('#story').html(reply);
-			}); 
+			});
+	};
+	function cardDraw() {
+			$.ajax("{{ url_for('game.draw') + '?slot=1'}}", async=false).done(function (reply) {
+				$('#card-1').html(reply);
+		}).done(function () {
+			$.ajax("{{ url_for('game.draw') + '?slot=2'}}", async=false).done(function (reply) {
+				$('#card-2').html(reply);
+		}).done(function (){
+			$.ajax("{{ url_for('game.draw') + '?slot=3'}}", async=false).done(function (reply) {
+				$('#card-3').html(reply);
+		})})});
 	};
 
-	function cardDraw() {
-	if(document.getElementById('slot-1').className == "card-slot") {
-		$.ajax("{{ url_for('game.draw') + '?slot=1'}}").done(function (reply) {
-			$('#card-1').html(reply);
-				}); 
-			};
-	if(document.getElementById('slot-2').className == "card-slot") {
-		$.ajax("{{ url_for('game.draw') + '?slot=2'}}").done(function (reply) {
-			$('#card-2').html(reply);
-				}); 
-			};
-	if(document.getElementById('slot-3').className == "card-slot") {
-		$.ajax("{{ url_for('game.draw') + '?slot=3'}}").done(function (reply) {
-			$('#card-3').html(reply);
-				}); 
-			};
-		};
 </script>
 </html>

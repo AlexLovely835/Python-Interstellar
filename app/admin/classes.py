@@ -34,7 +34,7 @@ def defaultStorylet():
         title="Untitled",
         image="black.png",
         description=None,
-        deck="Always",
+        deck="Pinned",
         area="All",
         urgency="Normal",
         order=0,

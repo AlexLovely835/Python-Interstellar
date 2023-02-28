@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     privilege_level = db.Column(db.Integer, default=1)
     last_online = db.Column(db.DateTime, default=datetime.utcnow)
     created_storylets = db.relationship('Storylet', backref='author', lazy='dynamic')
+    current_hand = db.relationship('Hand', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -41,6 +42,7 @@ class Storylet(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     last_edit = db.Column(db.DateTime, default=datetime.utcnow())
     last_editor = db.Column(db.String)
+    in_hand = db.relationship('Hand', backref='storylet', lazy='dynamic')
 
     def __repr__(self):
         return '<Storylet ID{}: {}, By: {}>'.format(self.id, self.title, self.author)
@@ -71,3 +73,9 @@ class Result(db.Model):
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+
+class Hand(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    storylet_id = db.Column(db.Integer, db.ForeignKey('storylet.id'))
+    slot = db.Column(db.Integer)
