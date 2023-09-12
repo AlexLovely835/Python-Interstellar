@@ -1,6 +1,6 @@
 from flask import url_for
 from app import db
-from app.models import Storylet, Branch, Result
+from app.models import Storylet, Branch, Result, Quality
 
 class PageResult():
     def __init__(self, data, page=1, number=20):
@@ -24,6 +24,18 @@ class Tag():
             self.q_list = db.session.query(Storylet).filter(Storylet.tag == name).order_by(Storylet.title).all()
         else:
             self.q_list = db.session.query(Storylet).filter(Storylet.user_id == user).filter(Storylet.tag == name).order_by(Storylet.title).all()
+
+    def __lt__(self, other):
+        return self.name < other.name
+    
+class Q_Tag():
+    def __init__(self, name):
+        if name == None:
+            self.name = "Unorganized"
+        else:
+            self.name = name
+        
+        self.q_list = db.session.query(Quality).filter(Quality.tag == name).order_by(Quality.title).all()
 
     def __lt__(self, other):
         return self.name < other.name
@@ -63,6 +75,16 @@ def defaultResult():
         random_weight=0,
         area_change="Temp",
         notes=None
+    )
+
+def defaultQuality():
+    return Quality(
+        title="Untitled",
+        image="black.png",
+        description=None,
+        notes=None,
+        display="Main",
+        tag=None
     )
 
 def allowed_file(filename):

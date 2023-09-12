@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interstellar</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}">
+	<script src="https://kit.fontawesome.com/22f5ccdbef.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="{{ url_for('admin.static', filename='javascript/admin.js')}}"></script>
+</head>
+<body>
+{% include 'navbar.html' %}
+<div class="pageblock"></div>
+<div style="width: 960px; margin: auto;">
+{% include 'flash_notifs.html' %}  
+    <div style="width: 960px;" class="storylet-column game boxshadow">
+        <a href="{{ url_for('admin.edit_quality') }}" class="adm-btn-link"><div class="adm-btn">Create New Quality</div></a>
+        <h2 style="margin-bottom: 40px;">Quality Database</h2>
+        <div id="qualities-panel">
+            {% for tag in tags %}
+            <button class="no-brdr storylet-tag"><h2>{{tag.name}}</h2></button>
+            <div class="storylet-tag-lst" style="display: flex; flex-wrap: wrap;">
+                {% for quality in tag.q_list %}
+                <div style="padding-left: 25px; padding-top: 12.5px; padding-bottom: 12.5px">
+                    <a class="quality" style="grid-template-columns: 50px 230px" href="{{ url_for('admin.edit_quality', id=quality.id) }}">
+                        <div class="recent-left">
+                            <div class="quality-image-cont">
+                                <img style="width: 35px;" class="digitaleffect" src="{{ url_for('static', filename='images/' + quality.image) }}" width="35px">
+                            </div>
+                        </div>
+                        <div class="recent-right">
+                            <p class="recent-text"><bold>{{ quality.title }}</bold></p>
+                        </div>
+                    </a> 
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+    </div>
+    <script>
+        var acc = document.getElementsByClassName("storylet-tag");
+        var i;
+        
+        for (i = 0; i < acc.length; i++) {
+          acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+              panel.style.maxHeight = null;
+            } else {
+              panel.style.maxHeight = panel.scrollHeight + "px";
+            } 
+          });
+        }
+    </script>   
+</body>
+</html>

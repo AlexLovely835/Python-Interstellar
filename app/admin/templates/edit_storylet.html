@@ -54,7 +54,9 @@
                         {% endif %}
                     </div>
                     </form>
-                    <div>Quality Section</div>
+                    <div id="storylet-quality-reqs">
+                        {% include 'storylet-quality-req-table.html' %}
+                    </div>
                 </div>
             </div>
             <div class="branch-core">
@@ -165,7 +167,6 @@
         </div>
     </div>
     <script>
-
         $(document).on('submit','#core-form', function(e) {
             e.preventDefault();
             $.ajax({
@@ -186,6 +187,21 @@
             }).done(function (reply) {
                                 $('#flash-container').html(reply);
                             });
+        });
+
+        $(document).on('submit','#storylet-qualities', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{{url_for("admin.add_s_req", id= storylet.id)}}',
+                data:{
+                    q_id: $("#s-quality").val(),
+                    q_min: $("#s-min-quality").val(),
+                    q_max: $("#s-max-quality").val()
+                }      
+            }).done(function (reply) {
+                $('#storylet-quality-reqs').html(reply);
+            });
         });
     </script>
 </body>

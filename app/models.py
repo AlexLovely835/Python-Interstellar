@@ -43,6 +43,7 @@ class Storylet(db.Model):
     last_edit = db.Column(db.DateTime, default=datetime.utcnow())
     last_editor = db.Column(db.String)
     in_hand = db.relationship('Hand', backref='storylet', lazy='dynamic')
+    requirements = db.relationship('StoryletQualityRequirements', backref='requirements', lazy='dynamic')
 
     def __repr__(self):
         return '<Storylet ID{}: {}, By: {}>'.format(self.id, self.title, self.author)
@@ -79,3 +80,20 @@ class Hand(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     storylet_id = db.Column(db.Integer, db.ForeignKey('storylet.id'))
     slot = db.Column(db.Integer)
+
+class Quality(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    image = db.Column(db.String)
+    description = db.Column(db.Text)
+    notes = db.Column(db.String)
+    display = db.Column(db.String)
+    category = db.Column(db.String)
+    tag = db.Column(db.String)
+
+class StoryletQualityRequirements(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    minimum = db.Column(db.Integer)
+    maximum = db.Column(db.Integer)
+    quality_id = db.Column(db.Integer, db.ForeignKey('quality.id'))
+    storylet_id = db.Column(db.Integer, db.ForeignKey('storylet.id'))

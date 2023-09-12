@@ -5,9 +5,9 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask import redirect, render_template, request, url_for, flash
 from flask_login import current_user, login_required
-from app.models import User, Storylet, Branch, Result, Image
-from app.admin.forms import EditUserForm, CreateUserForm, SearchForm, StoryletForm
-from app.admin.classes import PageResult, Tag, defaultStorylet, defaultBranch, defaultResult, allowed_file
+from app.models import User, Storylet, Branch, Result, Image, Quality, Hand, StoryletQualityRequirements
+from app.admin.forms import EditUserForm, CreateUserForm, SearchForm, StoryletForm, QualityForm
+from app.admin.classes import *
 
 @bp.route('/')
 @login_required
@@ -78,7 +78,9 @@ def edit_storylet():
         form.tag.data = storylet.tag
         form.escapable.data = storylet.escapable
         form.order.data = storylet.order
-        return render_template('edit_storylet.html', form=form, storylet=storylet)
+
+        qualities = db.session.query(Quality).all()
+        return render_template('edit_storylet.html', form=form, storylet=storylet, qualities=qualities)
     else:
         return redirect(url_for('index'))
 
@@ -193,6 +195,9 @@ def delete_storylet():
             for result in branch.results:
                 db.session.delete(result)
             db.session.delete(branch)
+        storylet_hand = db.session.query(Hand).filter(Hand.storylet_id==id).all()
+        for hand in storylet_hand:
+            db.session.delete(hand)
         db.session.delete(storylet)
         db.session.commit()
         flash("Storylet deleted.")
@@ -359,3 +364,105 @@ def delete_image():
         return redirect(url_for('admin.images'))
     else:
         return redirect(url_for('index'))
+    
+@bp.route('/qualities')
+@login_required
+def qualities():
+    if current_user.privilege_level > 1:
+
+
+        #Construct a list of Q_Tags and their Qualities
+        tags = []
+        tag_list = db.session.query(Quality.tag.distinct().label("tag")).all()
+        
+        for tag in tag_list:
+            tag = str(tag).replace('(', '').replace(')', '').replace(',', '').replace("'", "")
+            if tag == 'None':
+                tags.append(Q_Tag(None))
+            else:
+                tags.append(Q_Tag(tag))
+
+        tags.sort()
+        for tag in tags:
+            print(tag.q_list)
+
+        return render_template('qualities.html', tags=tags)
+    else:
+        return redirect(url_for('index'))
+    
+@bp.route('/edit_quality')
+@login_required
+def edit_quality():
+    if current_user.privilege_level > 1:
+        id = request.args.get('id', None, type=int)
+        form = QualityForm()
+        if id == None:
+            quality = defaultQuality()
+            db.session.add(quality)
+            db.session.commit()
+            quality = db.session.query(Quality).get(quality.id)
+        else:
+            quality = db.session.query(Quality).get(id)
+        form.title.data = quality.title
+        form.image.data = quality.image
+        form.description.data = quality.description
+        form.notes.data = quality.notes
+        form.display.data = quality.display
+        form.category.data = quality.category
+        form.tag.data = quality.tag
+        return render_template('edit_quality.html', form=form, quality=quality)
+    else:
+        return redirect(url_for('index'))
+    
+@bp.route('/save_quality', methods=['POST', 'GET'])
+@login_required
+def save_quality():
+    id = request.args.get('id', type=int)
+    quality = db.session.query(Quality).get(id)
+    quality.title = request.form.get("title")
+    quality.image = request.form.get("image")
+    quality.description = request.form.get("description")
+    quality.notes = request.form.get("notes")
+    tag = request.form.get("tag")
+    tag.strip()
+    if tag == "":
+        quality.tag = None
+    else:
+        quality.tag = tag
+    db.session.commit()
+    flash("Your changes have been saved.")
+    return redirect(url_for('flash_notifs'))
+
+@bp.route('/delete_quality', methods=['POST', 'GET'])
+@login_required
+def delete_quality():
+    if current_user.privilege_level > 1:
+        id = request.args.get('id', type=int)
+        quality = db.session.query(Quality).get(id)
+        db.session.delete(quality)
+        db.session.commit()
+        flash("Quality deleted.")
+        return redirect(url_for('admin.qualities'))
+    else:
+        return redirect(url_for('index'))
+    
+
+@bp.route('/add_s_req', methods=['POST', 'GET'])
+@login_required
+def add_s_req():
+    if current_user.privilege_level > 1:
+        s_id = request.args.get('id', type=int)
+        new_req = StoryletQualityRequirements(
+            minimum = int(request.form.get("q_min")),
+            maximum = int(request.form.get("q_max")),
+            quality_id = int(request.form.get("q_id")),
+            storylet_id = s_id
+        )
+        db.session.add(new_req)
+        db.session.commit()
+        flash("Requirement added.")
+        storylet = db.session.query(Storylet).get(s_id)
+        qualities = db.session.query(Quality).all()
+        return render_template('storylet-quality-req-table.html', storylet=storylet, qualities=qualities)
+    else:
+        return redirect(url_for('index'))  

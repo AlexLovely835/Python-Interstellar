@@ -1,0 +1,30 @@
+<table>
+    <tr>
+        <td><p class="labels" style="margin-left: 2px;">Quality Required</p></td>
+        <td><p class="labels" style="margin-left: 2px;">Min</p></td>
+        <td><p class="labels" style="margin-left: 2px;">Max</p></td>
+        <td><p class="labels" style="margin-left: 2px;">Remove</p></td>
+    </tr>
+    {% for req in storylet.requirements %}
+    <tr>
+        <td><p style="margin-left: 2px;">{{ req.quality_id }}</p></td>
+        <td><p style="margin-left: 2px;">{{ req.minimum }}</p></td>
+        <td><p style="margin-left: 2px;">{{ req.maximum }}</p></td>
+        <td><p style="margin-left: 2px;">rem</p></td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <form id="storylet-qualities" action="" method="POST">
+        <td>  
+            <select id="s-quality" style="width: 150px;"> 
+                {% for quality in qualities %}
+                    <option value="{{ quality.id }}">{{ quality.title }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input id="s-min-quality" min="0" type="number" size="2"></td>
+        <td><input id="s-max-quality" min="0" type="number" size="2"></td>
+        <td><input id="core-submit" class='adm-btn-link' style="margin-right: 10px;" name="submit" type="submit" value="Set"></td>
+        </form>
+    </tr>
+</table>

@@ -53,9 +53,18 @@ class StoryletForm(FlaskForm):
     description = TextAreaField('Description')
     notes = TextAreaField('Notes')
     urgency = SelectField('Urgency', choices=['Low', 'Normal', 'Moderate', 'High'])
-    deck = SelectField('Deck', choices=['Pinned', 'Deck', "Unobtainable"])
+    deck = SelectField('Deck', choices=['Pinned', 'Deck', 'Unobtainable'])
     area = SelectField('Area', choices=['Temp'])
     tag = StringField('Tag')
     order = IntegerField('Order', validators=[NumberRange(min=0)])
     escapable = BooleanField('Escapable')
+
+class QualityForm(FlaskForm):
+    title = StringField('Title')
+    image = StringField('Image')
+    description = TextAreaField('Description')
+    notes = TextAreaField('Notes')
+    display = SelectField('Display', choices=['None', 'Main'])
+    category = StringField('Category')
+    tag = StringField('Tag')
 

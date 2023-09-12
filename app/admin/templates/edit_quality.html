@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interstellar</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}">
+	<script src="https://kit.fontawesome.com/22f5ccdbef.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="{{ url_for('admin.static', filename='javascript/admin.js')}}"></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="pageblock"></div>
+    <div style="width: 960px; margin: auto;">
+        <div id="flash-container">
+        {% include 'flash_notifs.html' %}
+        </div>
+        <div style="padding: 20px;" class="game boxshadow">
+            <a class="adm-btn-link" href="{{ url_for('admin.qualities') }}"><div><i class="fa-solid fa-arrow-left-long"></i></div></a>
+            <div class="storylet-core">
+                <div style="margin-top: 50px;" class="header boxshadow">Quality #{{ quality.id }}<div style="float: right;"><a href="{{ url_for('admin.delete_quality', id=quality.id) }}">Delete Quality</a></div></div>
+                <div class="storylet-body boxshadow">
+                    <form id="core-form" class="form1-body" action="" method="POST">
+                    <div>
+                        <div class="storylet-img-cont">
+                            <img class="digitaleffect" src="{{ url_for('static', filename='images/' + quality.image) }}">
+                        </div>
+                        {{ form.image(size=13, style='margin-top: 5px;', id='image') }}
+                        <a class="adm-btn-link" style="float: left;" href="#find-image"><div>Find Image</div></a>
+                    </div>
+                    <div>
+                        {{ form.title(size=40, id='title') }}
+                        {{ form.description(class='note-area', id='desc') }}
+                        {{ form.notes(class='note-area', id='notes')}}
+                        <input id="core-submit" class='adm-btn-link' style="margin-right: 10px;" name="submit" type="submit" value="Save Changes">
+                    </div>
+                    <div>
+                        <p class="labels">{{ form.display.label }}:</p>
+                        <p class="labels">{{ form.category.label }}:</p>
+                        <p class="labels">{{ form.tag.label }}:</p>
+                    </div>
+                    <div>
+                        <p class="form-fields">{{ form.display }}</p>
+                        <p class="form-fields">{{ form.category(size=10) }}</p>
+                        <p class="form-fields">{{ form.tag(size=10) }}</p>
+                    </div>
+                    </form>
+                    <div>Additional Section</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $(document).on('submit','#core-form', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{{url_for("admin.save_quality", id= quality.id)}}',
+                data:{
+                    title: $("#title").val(),
+                    description: $("#desc").val(),
+                    notes: $("#notes").val(),
+                    image: $("#image").val(),
+                    display: $("#display").val(),
+                    category: $("#category").val(),
+                    tag: $("#tag").val(),
+                }      
+            }).done(function (reply) {
+                                $('#flash-container').html(reply);
+                            });
+        });
+    </script>
+</body>
+</html>
