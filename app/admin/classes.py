@@ -2,6 +2,8 @@ from flask import url_for
 from app import db
 from app.models import Storylet, Branch, Result, Quality
 
+
+# A class that is given user data and paginates the data.
 class PageResult():
     def __init__(self, data, page=1, number=20):
         self.__dict__ = dict(zip(['data', 'page', 'number'], [data, page, number]))
@@ -14,6 +16,8 @@ class PageResult():
     def __repr__(self):
         return url_for('admin.users', pagenum=self.page+1)
 
+# Tag objects that are created from the tags of either a storylet or quality and store a list of all corresponding storylets and qualities for display purposes. 
+# Storylet tags can additionally filter by user if a user is provided.
 class Tag():
     def __init__(self, name, user):
         if name == None:
@@ -40,7 +44,7 @@ class Q_Tag():
     def __lt__(self, other):
         return self.name < other.name
 
-
+# Each default function returns an object of the corresponding type that is filled with default/generic information to be fed into a brand new database instance of the object.
 def defaultStorylet():
     return Storylet(
         title="Untitled",
@@ -87,5 +91,6 @@ def defaultQuality():
         tag=None
     )
 
+# Returns true if the filename is in proper format and false otherwise. Proper name format is anything ending in ".png"
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png'}

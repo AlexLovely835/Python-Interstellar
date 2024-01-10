@@ -28,7 +28,7 @@
                         <a class="adm-btn-link" style="float: left;" href="#find-image"><div>Find Image</div></a>
                     </div>
                     <div>
-                        {{ form.title(size=40, id='s-title') }}
+                        {{ form.title(size=36, id='s-title') }}
                         {{ form.description(class='desc-area', id='s-desc') }}
                         {{ form.notes(class='note-area', id='s-notes')}}
                         <input id="core-submit" class='adm-btn-link' style="margin-right: 10px;" name="submit" type="submit" value="Save Changes">
@@ -72,7 +72,7 @@
                             <a class="adm-btn-link" style="float: left;" href="#find-image"><i class="fa-solid fa-magnifying-glass"></i></a>
                         </div>
                         <div>
-                            <input id="title-{{ branch.id }}" type="text" value="{{ branch.title }}" size="40">
+                            <input id="title-{{ branch.id }}" type="text" value="{{ branch.title }}" size="36">
                             <textarea style="height: 120px;" id="desc-{{ branch.id }}" class="desc-area">{{ branch.description }}</textarea>
                             <textarea id="notes-{{ branch.id }}" class="note-area">{% if branch.notes != None %}{{ branch.notes }}{% endif %}</textarea>
                             <p style="margin-top: 3px;"><b style="font-size: 12px;">Button Text:</b> <input id="btntxt-{{ branch.id }}" type="text" value="{{ branch.button_text }}" size="28"></p>
@@ -110,7 +110,7 @@
                     <div style="width: 555px;" class="header boxshadow">Result ID #{{result.id}}<div style="float: right;"><a href="{{ url_for('admin.delete_result', s_id=storylet.id, r_id=result.id) }}">Delete Result</a></div></div>
                     <div class="result-body boxshadow">
                         <form id="result-{{ result.id }}" class="result-form1" action="" method="POST">
-                            <input id="title-r-{{ result.id }}" type="text" value="{{ result.title }}" size="40">
+                            <input id="title-r-{{ result.id }}" type="text" value="{{ result.title }}" size="36">
                             <textarea style="height: 120px;" id="desc-r-{{ result.id }}" class="desc-area">{{ result.description }}</textarea>
                             <textarea id="notes-r-{{ result.id }}" class="note-area">{% if result.notes != None %}{{ result.notes }}{% endif %}</textarea>
                             <p style="margin-top: 3px;"><b style="font-size: 12px;">Type:</b> 

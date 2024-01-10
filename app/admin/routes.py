@@ -9,6 +9,10 @@ from app.models import User, Storylet, Branch, Result, Image, Quality, Hand, Sto
 from app.admin.forms import EditUserForm, CreateUserForm, SearchForm, StoryletForm, QualityForm
 from app.admin.classes import *
 
+# This file contains all routes for the various admin panels and game editors. Every page will redirect outside of the app if a user is not logged in.
+# The logged in user will also be redirected back to the game page if they try and access these pages without proper privilege levels.
+
+# Landing page for the entire admin side of the site.
 @bp.route('/')
 @login_required
 def admin():
@@ -17,6 +21,11 @@ def admin():
     else:
         return redirect(url_for('index'))
 
+#
+#   STORYLETS AND STORYLET EDITOR
+#
+
+# Page for displaying all storylets and accessing the storylet editor.
 @bp.route('/storylets')
 @login_required
 def storylets():
@@ -54,6 +63,7 @@ def storylets():
     else:
         return redirect(url_for('index'))
 
+# Page for editing an idividual storylet, loads in the storylet either by id, or from the defaultStorylet(). 
 @bp.route('/edit_storylet')
 @login_required
 def edit_storylet():
@@ -84,6 +94,8 @@ def edit_storylet():
     else:
         return redirect(url_for('index'))
 
+# Route for submitting data for an updated storylet, handled by id. 
+# Due to the way certain parts of the form works, certain values are modified for the database.
 @bp.route('/save_storylet', methods=['POST', 'GET'])
 @login_required
 def save_storylet():
@@ -116,6 +128,8 @@ def save_storylet():
     flash("Your changes have been saved.")
     return redirect(url_for('flash_notifs'))
 
+# Route for submitting data for an updated branch, handled by id. 
+# Due to the way certain parts of the form works, certain values are modified for the database.
 @bp.route('/save_branch', methods=['POST', 'GET'])
 @login_required
 def save_branch():
@@ -140,6 +154,8 @@ def save_branch():
     flash("Your changes have been saved.")
     return redirect(url_for('flash_notifs'))
 
+# Route for submitting data for an updated result, handled by id. 
+# Due to the way certain parts of the form works, certain values are modified for the database.
 @bp.route('/save_result', methods=['POST', 'GET'])
 @login_required
 def save_result():
@@ -164,6 +180,7 @@ def save_result():
     flash("Your changes have been saved.")
     return redirect(url_for('flash_notifs'))
 
+# A route that creates a new branch from the default branch and attaches it to the given storylet by id.
 @bp.route('/create_branch', methods=['GET', 'POST'])
 @login_required
 def create_branch():
@@ -174,6 +191,7 @@ def create_branch():
     db.session.commit()
     return redirect(url_for('admin.create_result', s_id=id, b_id=branch.id))
 
+# A route that creates a new result from the default branch and attaches it to the given branch by id.
 @bp.route('/create_result', methods=['POST', 'GET'])
 @login_required
 def create_result():
@@ -185,6 +203,7 @@ def create_result():
     db.session.commit()
     return redirect(url_for('admin.edit_storylet', id = s_id))
 
+# A route that iteratively deletes a storylet based on its id after deleting each branch and each result attached to it.
 @bp.route('/delete_storylet', methods=['POST', 'GET'])
 @login_required
 def delete_storylet():
@@ -204,7 +223,8 @@ def delete_storylet():
         return redirect(url_for('admin.storylets'))
     else:
         return redirect(url_for('index'))
-    
+
+# A route that iteratively deletes a branch based on its id after deleting result attached to it.
 @bp.route('/delete_branch', methods=['POST', 'GET'])
 @login_required
 def delete_branch():
@@ -220,7 +240,8 @@ def delete_branch():
         return redirect(url_for('admin.edit_storylet', id=s_id))
     else:
         return redirect(url_for('index'))
-    
+
+ # A route that deletes a single result from a branch, based on id.   
 @bp.route('/delete_result', methods=['POST', 'GET'])
 @login_required
 def delete_result():
@@ -235,6 +256,11 @@ def delete_result():
     else:
         return redirect(url_for('index'))
 
+#
+#   USER DATABASE AND EDITOR
+#
+
+# A route that presents paginated display for all users as well as search functionality. 
 @bp.route('/users/<pagenum>', methods=['GET', 'POST'])
 @login_required
 def users(pagenum):
@@ -266,11 +292,11 @@ def users(pagenum):
             flash("No search results found.")
             return redirect(url_for('admin.users', pagenum=1))
 
-        #Return
         return render_template('users.html', listing=PageResult(users, int(pagenum)), form=form, result=result, query=form.q.data)
     else:
         return redirect(url_for('index'))
 
+# A page for creating a new user and submitting it to the database.
 @bp.route('/create_user', methods=['GET', 'POST'])
 @login_required
 def create_user():
@@ -287,6 +313,7 @@ def create_user():
     else:
         return redirect(url_for('index'))
 
+# A page for editing an existing user and submitting updates to the database.
 @bp.route('/edit_user', methods=['GET', 'POST'])
 @login_required
 def edit_user():
@@ -309,6 +336,7 @@ def edit_user():
     else:
         return redirect(url_for('index'))
 
+# A page for deleting a user from the database.
 @bp.route('/delete_user')
 @login_required
 def delete_user():
@@ -321,23 +349,36 @@ def delete_user():
         return redirect(url_for('admin.users', pagenum=1))
     else:
         return redirect(url_for('index'))
+
+#
+#   IMAGE HANDLING
+#
     
+# Page for displaying images and uploading images (image uploading is an entirely local process, most likely needs to be changed)
 @bp.route('/images', methods=['GET', 'POST'])
 @login_required
 def images():
     if current_user.privilege_level > 1:
         if request.method == 'POST':
+
+            # Check that a file exists in the first place.
             if 'file' not in request.files:
                 flash("No file uploaded.")
                 return redirect(request.url)
             file = request.files['file']
+
+            # Check that the file has a propper name. 
             if file.filename == '':
                 flash("No file selected.")
                 return redirect(request.url)
+            
+            # Check that no other image files have the same name.
             for images in db.session.query(Image).all():
                 if file.filename == images.name:
                     flash("Duplicate image title.")
                     return redirect(request.url)
+                
+            # Upload file, given that all other checks are passed, and the file is a properly named png file (allowed_file checks this)
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
@@ -350,6 +391,7 @@ def images():
     else:
         return redirect(url_for('index'))
 
+# Route for deleting a given image by id.
 @bp.route('/delete_image', methods=['GET', 'POST'])
 @login_required
 def delete_image():
@@ -365,6 +407,11 @@ def delete_image():
     else:
         return redirect(url_for('index'))
     
+#
+#   QUALITY DISPLAY AND EDITOR
+#
+
+# A page for displaying qualities, using a similar tagging system to the above storylet page.
 @bp.route('/qualities')
 @login_required
 def qualities():
@@ -389,7 +436,8 @@ def qualities():
         return render_template('qualities.html', tags=tags)
     else:
         return redirect(url_for('index'))
-    
+
+# A page for editing a quality based on id.
 @bp.route('/edit_quality')
 @login_required
 def edit_quality():
@@ -414,6 +462,7 @@ def edit_quality():
     else:
         return redirect(url_for('index'))
     
+# A route for saving edited qualities.
 @bp.route('/save_quality', methods=['POST', 'GET'])
 @login_required
 def save_quality():
@@ -433,6 +482,7 @@ def save_quality():
     flash("Your changes have been saved.")
     return redirect(url_for('flash_notifs'))
 
+# A route for deleting qualities.
 @bp.route('/delete_quality', methods=['POST', 'GET'])
 @login_required
 def delete_quality():
@@ -446,7 +496,7 @@ def delete_quality():
     else:
         return redirect(url_for('index'))
     
-
+# A route for additing a storylet quality requirement, based on both storylet and quality ids. 
 @bp.route('/add_s_req', methods=['POST', 'GET'])
 @login_required
 def add_s_req():

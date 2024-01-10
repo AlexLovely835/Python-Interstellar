@@ -4,14 +4,14 @@ from flask import render_template
 from flask_login import current_user, login_required
 
 
-# This renders the main index page and redirects anyone that's not logged in to the login page instead.
+# The default route; will redirect all users that are not logged in. Index loads the main game. 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
     return render_template('index.html')
 
-# This renders the notification top bar above main page content.
+# Renders notifications as needed.
 @app.route('/flash_notifs')
 def flash_notifs():
     return render_template('flash_notifs.html')

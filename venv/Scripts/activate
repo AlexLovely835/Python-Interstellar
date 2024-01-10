@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\alexl\projects\Python Interstellar\venv"
+VIRTUAL_ENV="C:\Users\alexl\projects\Web Dev\Python Interstellar\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -5,6 +5,9 @@ from flask_login import current_user, login_required
 from app.models import Storylet, Branch, Hand
 import random
 
+# This file contains all routes that display the player view for the game. 
+
+# Route for rendering a storylet, by id.
 @bp.route('/storylet')
 @login_required
 def storylet():
@@ -12,6 +15,8 @@ def storylet():
     storylet = db.session.query(Storylet).get(id)
     return render_template('storylet.html', storylet=storylet)
 
+
+# Route for rendering branch results, by branch id. 
 @bp.route('/results')
 @login_required
 def results():
@@ -30,12 +35,14 @@ def results():
             db.session.commit()
     return render_template('result.html', storylet=storylet, branch=branch, result=result) 
 
+# Route for rendering the main game screen.
 @bp.route('/game')
 @login_required
 def game():
     storylets = db.session.query(Storylet).filter(Storylet.deck == 'Pinned').order_by(Storylet.order).all()
     return render_template('game.html', storylets=storylets)
 
+# Route for drawing cards from the deck and placing them in a players hand. 
 @bp.route('/draw')
 @login_required
 def draw():
@@ -60,6 +67,8 @@ def draw():
     else: 
         return render_template('slot.html', slot=slot)
 
+# Route for loading a card into the players hand.
+# Complicated simply because it moves all cards to the left as slots open up.
 @bp.route('/load_card')
 @login_required
 def load_card():
